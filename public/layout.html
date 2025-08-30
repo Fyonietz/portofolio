@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboiard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+     @header(title="Default Title", subtitle="Default Subtitle") 
+        <header><h1>{{title}}</h1><p>{{subtitle}}</p></header> 
+      @header;
+      @nav(href="/about",title="About")
+        <a href={{href}}>{{title}}</a>
+      @nav;
+        @menus  
+        <h2>Phoenix Layout.html</h2>  
+        @menus;
+        @main_button(title="Dashboard")
+        <button class="test">{{title}}</button>
+        @main_button;
+        @footer 
+        <h2>footer</h2> 
+        @footer;
+</body>
+</html>

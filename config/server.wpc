@@ -1,0 +1,5 @@
+Document_Root=public
+Server_Port=9001
+Number_Threads=64
+Keep_Alive=yes
+Routes_Type=debug
