@@ -55,7 +55,7 @@ extern "C" struct EXPORT Pnix {
         std::string result = content;
         
         for (const auto& pair : args) {
-            std::string placeholder = "{{" + pair.first + "}}";
+            std::string placeholder = "{" + pair.first + "}";
             size_t pos = 0;
             while ((pos = result.find(placeholder, pos)) != std::string::npos) {
                 result.replace(pos, placeholder.length(), pair.second);

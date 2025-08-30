@@ -54,7 +54,7 @@ extern "C" EXPORT void update(mg_context *context) {
     // Register all routes from the vector
     for (const auto& route : routes) {
         if (route.handler) {
-            std::cout << " > Registering route: " << route.path << std::endl;
+            std::cout << " > Phoenix[Info]: Registering route: " << route.path << std::endl;
             GlobalRoute.add(context, route.path, route.handler, route.data);
         }
     }

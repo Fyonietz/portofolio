@@ -1,6 +1,4 @@
 #include "handler.hpp"
-Pnix Server;
-Global test;
 
 
 route("/about", about){

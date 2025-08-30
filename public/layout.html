@@ -1,27 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
+  @meta(title="Portfolio")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboiard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>{title}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+  @meta;
 </head>
-<body>
-     @header(title="Default Title", subtitle="Default Subtitle") 
-        <header><h1>{{title}}</h1><p>{{subtitle}}</p></header> 
-      @header;
-      @nav(href="/about",title="About")
-        <a href={{href}}>{{title}}</a>
-      @nav;
-        @menus  
-        <h2>Phoenix Layout.html</h2>  
-        @menus;
-        @main_button(title="Dashboard")
-        <button class="test">{{title}}</button>
-        @main_button;
-        @footer 
-        <h2>footer</h2> 
-        @footer;
+<body class="font-sans bg-beige text-charcoal">
+ @header
+  <!-- Navbar -->
+    <header class="bg-crimson p-4 shadow-md fixed top-0 left-0 w-full z-50 ">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <!-- Logo -->
+            <div class="text-white text-2xl font-semibold">
+               Habib Herdiansyah
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-x-6">
+                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Home</a>
+                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">About</a>
+                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Services</a>
+                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Contact</a>
+            </nav>
+
+            <!-- Mobile Menu Button (optional) -->
+            <div class="lg:hidden">
+                <button class="text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+ @header;
+    <!-- Hero Section -->
+  <section class="relative min-h-screen bg-charcoal flex flex-col justify-center px-10 md:px-20 overflow-hidden">
+    <!-- Text -->
+    <div class="max-w-xl space-y-6 z-10">
+      <h2 class="text-5xl text-white md:text-6xl font-bold leading-tight">
+        CRAFT <br> THE SYSTEM
+      </h2>
+      <a href="#extern" 
+         class="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition">
+         Extern
+      </a>
+    </div>
+
+    <!-- Photo Bottom Right -->
+    <div class="absolute bottom-0 right-0 ">
+      <img src="img/photo-in.png" 
+           alt="Profile" 
+           class="w-[250px] md:w-[450px] pto rounded-lg hover:grayscale-0 transition duration-500">
+    </div>
+  </section>
+
+
+    @style
+    <style>
+       /* Font Style */
+        body {
+            font-family: 'Poppins', 'Roboto Mono', monospace;
+        }
+        .pto{
+         background-color: #DC143C !important;
+        background-size: 3% !important; /* Make the background smaller */
+          background-position: 15% -10% !important; /* Position it to the left and bottom */
+        background-repeat: no-repeat !important;
+         margin-left: 15% !important;
+         margin-bottom: -10% !important;
+        }
+        .head {
+            word-spacing: 0.5rem;
+            font-family: 'Bebas Neue', monospace;
+        }
+
+        /* Custom Colors */
+        .bg-crimson {
+            background-color: #DC143C;
+        }
+        .text-crimson {
+            color: #DC143C;
+        }
+        .bg-gold {
+            background-color: #FFD700;
+        }
+        .text-gold {
+            color: #FFD700;
+        }
+        .bg-olive {
+            background-color: #708238;
+        }
+        .text-olive {
+            color: #708238;
+        }
+        .bg-beige {
+            background-color: #F5F5DC;
+        }
+        .text-charcoal {
+            color: #333333;
+        }
+        .bg-charcoal {
+            background-color: #333333;
+        }
+      </style>
+    @style;
 </body>
 </html>

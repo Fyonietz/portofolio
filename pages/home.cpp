@@ -1,6 +1,7 @@
 #include "handler.hpp"
 Pnix Server;
 Global test;
+
 bool file_exists(const std::string& filename) {
     struct stat buffer;
     return (stat(filename.c_str(), &buffer) == 0);
@@ -39,28 +40,32 @@ route("/",default_handler){
     // Otherwise, try to serve static file from public folder
     std::string filepath = "public" + uri;
 
-    if (file_exists(filepath)) {
-        std::ifstream file(filepath, std::ios::binary);
-        if (!file) {
-            mg_printf(connection,
-                "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n");
-            return 1;
-        }
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        std::string file_content = buffer.str();
-        file.close();
-
-        std::string mime = get_mime_type(filepath.c_str());
-
+   if (file_exists(filepath)) {
+    std::ifstream file(filepath, std::ios::binary);
+    if (!file) {
         mg_printf(connection,
-            "HTTP/1.1 200 OK\r\n"
-            "Content-Type: %s\r\n"
-            "Content-Length: %zu\r\n\r\n%s",
-            mime.c_str(), file_content.size(), file_content.c_str());
-
+            "HTTP/1.1 404 Not Found\r\nContent-Length: 0\r\n\r\n");
         return 1;
     }
+
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string file_content = buffer.str();
+    file.close();
+
+    std::string mime = get_mime_type(filepath.c_str());
+
+    mg_printf(connection,
+        "HTTP/1.1 200 OK\r\n"
+        "Content-Type: %s\r\n"
+        "Content-Length: %zu\r\n\r\n",
+        mime.c_str(), file_content.size());
+
+    mg_write(connection, file_content.data(), file_content.size());
+
+    return 1;
+}
+
 
     // Not found
     mg_printf(connection,
@@ -73,9 +78,3 @@ EXPORT int home(struct mg_connection *connection,void *callback){
     return 200;  
 };
 
-
-
-route("/simple", simple_route) {
-   mg_printf(connection, "HTTP/1.1 200 OK\r\nContent-Length: 0\r\n\r\n");
-   return 200;  
-};

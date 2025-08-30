@@ -1,15 +1,11 @@
-[ 18%] Built target civetweb
-[ 45%] Built target core_static
-[ 63%] Built target Phoenix
-[ 72%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/about.cpp.o
-In file included from /home/fyonietz/Repo/Phoenix/pages/about.cpp:1:
-/home/fyonietz/Repo/Phoenix/pages/handler.hpp:21:27: warning: backslash-newline at end of file
-   21 | #define route(PATH, NAME) \
+[ 16%] Built target civetweb
+[ 41%] Built target core_static
+[ 58%] Built target Phoenix
+[ 66%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/home.cpp.o
+In file included from /home/fyonietz/Repo/portofolio/pages/home.cpp:1:
+/home/fyonietz/Repo/portofolio/pages/handler.hpp:22:27: warning: backslash-newline at end of file
+   22 | #define route(PATH, NAME) \
       |                            
-[ 81%] Linking CXX shared library /home/fyonietz/Repo/Phoenix/core/libroutes.so
-/usr/bin/ld: CMakeFiles/routes.dir/__/pages/home.cpp.o:(.bss+0x0): multiple definition of `Server'; CMakeFiles/routes.dir/__/pages/about.cpp.o:(.bss+0x0): first defined here
-/usr/bin/ld: CMakeFiles/routes.dir/__/pages/home.cpp.o:(.bss+0x1): multiple definition of `test'; CMakeFiles/routes.dir/__/pages/about.cpp.o:(.bss+0x1): first defined here
-collect2: error: ld returned 1 exit status
-gmake[2]: *** [routes/CMakeFiles/routes.dir/build.make:131: /home/fyonietz/Repo/Phoenix/core/libroutes.so.1.0] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:184: routes/CMakeFiles/routes.dir/all] Error 2
-gmake: *** [Makefile:91: all] Error 2
+[ 75%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
+Copying routes library to core directory
+[100%] Built target routes
