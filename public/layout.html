@@ -4,13 +4,13 @@
   @meta(title="Portfolio")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{title}</title>
+    <title>Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
-  @meta;
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">``
+@meta;
 </head>
 <body class="font-sans bg-beige text-charcoal">
  @header
@@ -40,27 +40,29 @@
             </div>
         </div>
     </header>
- @header;
+@header;
     <!-- Hero Section -->
-  <section class="relative min-h-screen bg-charcoal flex flex-col justify-center px-10 md:px-20 overflow-hidden">
-    <!-- Text -->
-    <div class="max-w-xl space-y-6 z-10">
-      <h2 class="text-5xl text-white md:text-6xl font-bold leading-tight">
-        CRAFT <br> THE SYSTEM
-      </h2>
-      <a href="#extern" 
-         class="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg font-semibold transition">
-         Extern
-      </a>
-    </div>
+  <section class="staircase-section">
+  <div class="left-column">
+    <h1>Craft  <br>The System</h1>
+    <button>Extern</button>
+  </div>
+  <div class="right-column">
+    <div class="crimson-background">
+      <h1 class="text-gold">
+    [ 16%] Born into existence: Crafting the essence of Live Philosophy<br>
+    [ 41%] Forming the foundation: Building the core of thought<br>
+    [ 58%] The Awakening: The rise of wisdom and enlightenment<br>
+    [ 66%] Navigating existence: Weaving the paths of understanding<br>
+    [ 75%] Ascending: Connecting the spheres of knowledge<br>
+    Transcendence: Embodying the philosophy within<br>
+    [100%] The journey complete: Live Philosophy transcended and realized<br>
+</h1>
 
-    <!-- Photo Bottom Right -->
-    <div class="absolute bottom-0 right-0 ">
-      <img src="img/photo-in.png" 
-           alt="Profile" 
-           class="w-[250px] md:w-[450px] pto rounded-lg hover:grayscale-0 transition duration-500">
     </div>
-  </section>
+    <img src="img/photo-in.png" class="photo">
+  </div>
+</section>
 
 
     @style
@@ -77,6 +79,123 @@
          margin-left: 15% !important;
          margin-bottom: -10% !important;
         }
+    .staircase-section {
+    display: flex;
+    min-height: 100vh;
+    background-color: #2a2a2a; /* Charcoal background */
+    justify-content: center;
+    align-items: center;
+    padding: 0 10px;
+    overflow: hidden;
+  }
+
+  /* Left Column */
+  .left-column {
+    width: 50%;
+    height: 100%;
+    display: flex;
+    margin-left: 10%;
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+    color: white;
+    padding: 20px;
+  }
+  .left-column h1{
+    font-family: 'Bebas Neue',monospace;
+    font-size: 7rem;
+  }
+  .left-column button{
+    background-color: #DC143C;
+    width: 40%;
+    height: 50px;
+    border-radius: 3%;
+   font-size: larger;
+  }
+  /* Right Column (Holds Crimson Background and Photo) */
+  .right-column {
+    position: relative;
+    width: 50%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+.crimson-background {
+    background-color: #DC143C;
+    position: absolute;
+    z-index: 0;
+    width: 70%;
+    height: 63%;
+    bottom: 10%;
+    right: -10%;
+    overflow: hidden;
+}
+  /* Photo styling */
+  .photo {
+    width: 80%;
+    position: relative;
+    z-index: 1; /* Ensure the image appears above the crimson background */
+    margin-top: 20%;
+    margin-right: -50%;
+    transition: transform 0.3s ease-in-out;
+  }
+
+  /* Optional hover effect on photo */
+  .photo:hover {
+    transform: scale(1.05); /* Adds a slight zoom effect */
+  }
+
+  /* Responsive Styles */
+  @media screen and (max-width: 768px) {
+    .staircase-section {
+      flex-direction: column; /* Stack columns vertically on smaller screens */
+      padding: 20px;
+      margin-top: 10%;
+    }
+
+    .left-column, .right-column {
+      width: 100%;
+      padding: 15px;
+    }
+    .left-column{
+      align-items: center;
+       margin-left: 0px !important;
+    }
+    .left-column h1{
+      font-size: 6rem;
+      text-align: center;
+     
+    }
+    .crimson-background {
+      width: 50vw !important; /* Adjust background size for smaller screens */
+      height: 40vh !important;
+      top: 25% !important;
+      left: 0vw !important;
+    }
+
+    .photo {
+      width: 90%;
+      margin-top: 20%; /* Adjust photo positioning on smaller screens */
+      margin-left: 5%;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .crimson-background {
+      width: 60%; /* Further adjust the crimson background on very small screens */
+      height: 60%;
+      top: 5%;
+      left: 10%;
+    }
+
+    .photo {
+      width: 90%;
+      margin-top: 10%; /* Adjust photo margin for even smaller screens */
+      margin-left: 5%;
+    }
+  }
         .head {
             word-spacing: 0.5rem;
             font-family: 'Bebas Neue', monospace;
@@ -111,6 +230,6 @@
             background-color: #333333;
         }
       </style>
-    @style;
+@style;
 </body>
 </html>
