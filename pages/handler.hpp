@@ -4,6 +4,8 @@
 #include "pyro.hpp"
 #include "../core/engine.hpp"
 #include "../routes/register.hpp"
+#include "../libs/Phoenix/sqlite3.hpp"
+#include "../libs/Phoenix/controller.hpp"
 #ifdef _WIN32
     #define EXPORT __declspec(dllexport)
 #else   
