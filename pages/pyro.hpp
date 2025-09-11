@@ -23,8 +23,23 @@ extern "C" struct EXPORT Pnix {
                      std::pair<std::string, std::map<std::string, std::string>>>
       layout_cache;
   std::mutex cache_mutex;
+  
+  int Response(struct mg_connection* conn, int status_code, const std::string& status_text, const std::string& json_body) {
+    mg_printf(conn,
+        "HTTP/1.1 %d %s\r\n"
+        "Content-Type: application/json\r\n"
+        "Content-Length: %zu\r\n"
+        "\r\n"
+        "%s",
+        status_code,
+        status_text.c_str(),
+        json_body.length(),
+        json_body.c_str()
+    );
 
-  std::string read_post_data(struct mg_connection *connection) {
+  return status_code;
+}
+  std::string Read(struct mg_connection *connection) {
     std::string body;
     char buffer[2048];
     int bytes_read;

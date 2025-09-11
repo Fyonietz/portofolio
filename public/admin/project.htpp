@@ -4,7 +4,7 @@
 @meta(title="Project")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project</title>
+    <title>Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,7 +70,7 @@
 
                 <!-- Submit Button -->
                 <div class="flex justify-center">
-                    <button type="submit" class="bg-gold text-white p-3 rounded-md hover:bg-gold/90 transition duration-200">Add Project</button>
+                    <button type="submit" class="bg-gold text-white p-3 rounded-md hover:bg-gold/90 transition duration-200" id="submit_project">Add Project</button>
                 </div>
             </form>
         </div>
