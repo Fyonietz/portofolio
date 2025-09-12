@@ -6,6 +6,7 @@
 #include "../routes/register.hpp"
 #include "../libs/Phoenix/sqlite3.hpp"
 #include "../libs/Phoenix/controller.hpp"
+#include <string>
 #ifdef _WIN32
     #define EXPORT __declspec(dllexport)
 #else   
@@ -13,6 +14,11 @@
 #endif
 extern Pnix Server;
 extern Global test;
+extern const std::string DATABASE;
+template <typename... Args>
+void print(Args&&... args) {
+    (std::cout << ... << args) << std::endl;
+}
 // Forward declarations
 struct mg_connection;
 

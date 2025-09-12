@@ -1,7 +1,9 @@
 # Build routes as a shared library for runtime update
 file(GLOB_RECURSE PAGE_LIST "../pages/*.cpp")
+file(GLOB_RECURSE LIBS "../libs/Phoenix/*.cpp")
 add_library(routes SHARED
     ${PAGE_LIST}
+    ${LIBS}
     register.cpp
 )
 
@@ -19,6 +21,7 @@ target_link_libraries(routes PRIVATE
     civetweb 
     pthread 
     dl
+    sqlite3
 )
 
 set_target_properties(routes PROPERTIES

@@ -21,6 +21,7 @@ set_target_properties(core_static PROPERTIES POSITION_INDEPENDENT_CODE ON)
 target_include_directories(core_static 
     PRIVATE core 
     PRIVATE libs
+    PUBLIC /usr/include
 )
 target_link_libraries(core_static PRIVATE civetweb)
 
@@ -32,10 +33,12 @@ add_executable(${PROJECT_NAME} ${MAIN})
 target_include_directories(${PROJECT_NAME}
     PRIVATE core
     PRIVATE libs
+    PUBLIC /usr/include/
+    sqlite3
 )
 
 # Link main executable to dependencies
-target_link_libraries(${PROJECT_NAME} PRIVATE core_static civetweb pthread dl)
+target_link_libraries(${PROJECT_NAME} PRIVATE core_static civetweb pthread dl sqlite3)
 
 # Platform-specific definitions
 if (WIN32)

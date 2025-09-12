@@ -1,30 +1,10 @@
-[ 16%] Built target civetweb
-[ 25%] Building CXX object CMakeFiles/core_static.dir/core/starter.cpp.o
-In file included from /home/fyonietz/Repo/portofolio/core/starter.cpp:2:
-/home/fyonietz/Repo/portofolio/core/../pages/pyro.hpp: In member function ‘int Pnix::Response(mg_connection*, int, const std::string&, const std::string&)’:
-/home/fyonietz/Repo/portofolio/core/../pages/pyro.hpp:39:19: error: no matching function for call to ‘stoi(int&)’
-   39 |   return std::stoi(status_code);
-      |          ~~~~~~~~~^~~~~~~~~~~~~
-In file included from /usr/include/c++/12/string:53,
-                 from /usr/include/c++/12/bits/locale_classes.h:40,
-                 from /usr/include/c++/12/bits/ios_base.h:41,
-                 from /usr/include/c++/12/ios:42,
-                 from /usr/include/c++/12/ostream:38,
-                 from /usr/include/c++/12/iostream:39,
-                 from /home/fyonietz/Repo/portofolio/core/starter.hpp:4,
-                 from /home/fyonietz/Repo/portofolio/core/starter.cpp:1:
-/usr/include/c++/12/bits/basic_string.h:3971:3: note: candidate: ‘int std::__cxx11::stoi(const std::string&, std::size_t*, int)’
- 3971 |   stoi(const string& __str, size_t* __idx = 0, int __base = 10)
-      |   ^~~~
-/usr/include/c++/12/bits/basic_string.h:3971:22: note:   no known conversion for argument 1 from ‘int’ to ‘const std::string&’ {aka ‘const std::__cxx11::basic_string<char>&’}
- 3971 |   stoi(const string& __str, size_t* __idx = 0, int __base = 10)
-      |        ~~~~~~~~~~~~~~^~~~~
-/usr/include/c++/12/bits/basic_string.h:4114:3: note: candidate: ‘int std::__cxx11::stoi(const std::wstring&, std::size_t*, int)’
- 4114 |   stoi(const wstring& __str, size_t* __idx = 0, int __base = 10)
-      |   ^~~~
-/usr/include/c++/12/bits/basic_string.h:4114:23: note:   no known conversion for argument 1 from ‘int’ to ‘const std::wstring&’ {aka ‘const std::__cxx11::basic_string<wchar_t>&’}
- 4114 |   stoi(const wstring& __str, size_t* __idx = 0, int __base = 10)
-      |        ~~~~~~~~~~~~~~~^~~~~
-gmake[2]: *** [CMakeFiles/core_static.dir/build.make:90: CMakeFiles/core_static.dir/core/starter.cpp.o] Error 1
-gmake[1]: *** [CMakeFiles/Makefile2:130: CMakeFiles/core_static.dir/all] Error 2
-gmake: *** [Makefile:91: all] Error 2
+[ 15%] Built target civetweb
+[ 38%] Built target core_static
+[ 53%] Built target Phoenix
+[ 61%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/about.cpp.o
+[ 69%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/home.cpp.o
+[ 76%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/project.cpp.o
+[ 84%] Building CXX object routes/CMakeFiles/routes.dir/__/libs/Phoenix/sqlite3.cpp.o
+[ 92%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
+Copying routes library to core directory
+[100%] Built target routes
