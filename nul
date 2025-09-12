@@ -4,7 +4,6 @@
 [ 61%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/about.cpp.o
 [ 69%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/home.cpp.o
 [ 76%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/project.cpp.o
-[ 84%] Building CXX object routes/CMakeFiles/routes.dir/__/libs/Phoenix/sqlite3.cpp.o
-[ 92%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
+[ 84%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
 Copying routes library to core directory
 [100%] Built target routes

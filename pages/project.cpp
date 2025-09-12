@@ -1,5 +1,6 @@
 #include "../models/project_model.hpp"
 #include "handler.hpp"
+#include <functional>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -33,6 +34,7 @@ route("/admin/project/lists", project_lists) {
 }
 
 route("/admin/project/create", project_create) {
+  sqlite3 *db;
   json data_as_json = json::parse(Server.Read(connection));
   Model<Project> project_mapper;
   project_mapper.bind("title", &Project::name)
@@ -46,6 +48,7 @@ route("/admin/project/create", project_create) {
                            R"({"error":"Failed to open DB"})");
   }
 
+  sqlite3_exec(db, "PRAGMA journal_mode=WAL;", nullptr, nullptr, nullptr);
   sqlite
       .INSERT("project", "(title,desc,link)",
               "(" + Escape(project_object.name) + "," +
@@ -57,4 +60,28 @@ route("/admin/project/create", project_create) {
   return Server.Response(connection, 200, "Ok", R"({"message":"Success"})");
 }
 
-route("/admin/project/delete", project_delete) { return 200; }
+route("/admin/project/delete", project_delete){
+  json post_data = json::parse(Server.Read(connection));
+
+  Model<Project> pr;
+  pr.bind("id",&Project::id);
+  auto pr_obj = pr.parse_one(post_data);
+  
+  if(!Sqlite_Open()){
+    return Server.Response(connection, 500, "Internal Server Error",
+                           R"({"error":"Failed to open DB"})");
+  }
+
+  try {
+    
+    sqlite.DELETE("project").WHERE("id="+std::to_string(pr_obj.id)).execute();
+    Sqlite_Close();
+    return Server.Response(connection, 200, "Ok", R"({"message":"Success"})");
+
+  }
+  catch (const std::exception& e) {
+    Sqlite_Close();
+    return Server.Response(connection, 500, "Error",
+                           std::string("{\"error\":\"") + e.what() + "\"}");
+  }
+}
