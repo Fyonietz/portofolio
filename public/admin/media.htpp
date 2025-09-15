@@ -16,6 +16,7 @@
   li.selected { background-color: #cef; }
   #selected-path { margin-top: 1rem; font-weight: bold; }
   #upload-btn { margin-top: 1rem; padding: 0.5rem 1rem; }
+  #image-preview { margin-top: 1rem; max-width: 100%; max-height: 300px; border: 1px solid #ccc; display: none; }
 </style>
 </head>
 <body>
@@ -27,10 +28,14 @@
 
   <div id="selected-path">Selected folder: <em>None</em></div>
 
+  <img id="image-preview" alt="Image Preview" />
+
   <button id="upload-btn" disabled>Upload</button>
 
 <script>
   let selectedFolderPath = null;
+
+  const allowedImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg'];
 
   async function fetchDirectoryData() {
     try {
@@ -43,6 +48,11 @@
     }
   }
 
+  function isImageFile(filename) {
+    const lower = filename.toLowerCase();
+    return allowedImageExtensions.some(ext => lower.endsWith(ext));
+  }
+
   function buildTree(node, parentPath = '') {
     if (!node || !node.contents) return null;
 
@@ -50,10 +60,13 @@
     ul.classList.add('collapsible');
 
     node.contents.forEach(child => {
+      if (child.type === 'file' && !isImageFile(child.name)) {
+        return;
+      }
+
       const li = document.createElement('li');
       li.textContent = child.name;
 
-      // Build full path for this node
       const currentPath = parentPath + '/' + child.name;
 
       if (child.type === 'directory') {
@@ -64,39 +77,38 @@
           li.appendChild(childTree);
         }
 
-        // Toggle folder expand/collapse
         li.addEventListener('click', e => {
           e.stopPropagation();
           li.classList.toggle('expanded');
           if (childTree) childTree.classList.toggle('expanded');
         });
 
-        // Select folder on double click
         li.addEventListener('dblclick', e => {
           e.stopPropagation();
           selectFolder(currentPath, li);
+          clearImagePreview();
         });
 
       } else {
         li.classList.add('file');
 
-        // Show full path on file click
         li.addEventListener('click', e => {
           e.stopPropagation();
-          const fullPath = 'public' + currentPath;
 
-          // Highlight selected file
+          // No "public" prefix here
+          const fullPath = currentPath;
+
           const prevSelected = document.querySelector('li.selected');
           if (prevSelected) prevSelected.classList.remove('selected');
           li.classList.add('selected');
 
-          // Show full file path
           document.getElementById('selected-path').innerHTML =
             `Selected file path: <em>${fullPath}</em>`;
 
-          // Set selected folder path to file's directory (for upload target)
           selectedFolderPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
           checkUploadReady();
+
+          showImagePreview(fullPath);
         });
       }
 
@@ -107,23 +119,46 @@
   }
 
   function selectFolder(path, liElement) {
-    // Remove previous selection highlight
     const prevSelected = document.querySelector('li.selected');
     if (prevSelected) prevSelected.classList.remove('selected');
 
-    // Highlight the newly selected folder
     liElement.classList.add('selected');
 
     selectedFolderPath = path;
     document.getElementById('selected-path').innerHTML = `Selected folder: <em>${selectedFolderPath}</em>`;
 
     checkUploadReady();
+    clearImagePreview();
   }
 
   function checkUploadReady() {
     const fileInput = document.getElementById('file-input');
     const uploadBtn = document.getElementById('upload-btn');
     uploadBtn.disabled = !(fileInput.files.length > 0 && selectedFolderPath);
+  }
+
+
+  async function renderTree() {
+    const container = document.getElementById('directory-tree');
+    const data = await fetchDirectoryData();
+
+    if (!data || !Array.isArray(data)) {
+      container.textContent = 'Failed to load data.';
+      return;
+    }
+
+    const root = data.find(item => item.type === 'directory');
+    if (!root) {
+      container.textContent = 'No directory data found.';
+      return;
+    }
+
+    const tree = buildTree(root, '');
+    container.innerHTML = '';
+    if (tree) {
+      tree.classList.add('expanded');
+      container.appendChild(tree);
+    }
   }
 
   async function uploadFile() {
@@ -146,8 +181,9 @@
       const result = await response.json();
       if (response.ok) {
         alert('Upload successful!');
-        fileInput.value = ''; // reset file input
+        fileInput.value = '';
         document.getElementById('upload-btn').disabled = true;
+        renderTree();
       } else {
         alert('Upload failed: ' + (result.message || 'Unknown error'));
       }
@@ -156,33 +192,23 @@
     }
   }
 
-  async function renderTree() {
-    const container = document.getElementById('directory-tree');
-    const data = await fetchDirectoryData();
+  function showImagePreview(imagePath) {
+    const preview = document.getElementById('image-preview');
+    preview.src = imagePath;
+    preview.style.display = 'block';
+  }
 
-    if (!data || !Array.isArray(data)) {
-      container.textContent = 'Failed to load data.';
-      return;
-    }
-
-    const root = data.find(item => item.type === 'directory');
-    if (!root) {
-      container.textContent = 'No directory data found.';
-      return;
-    }
-
-    const tree = buildTree(root, ''); // root path empty string
-    container.innerHTML = '';
-    if (tree) {
-      tree.classList.add('expanded'); // root expanded by default
-      container.appendChild(tree);
-    }
+  function clearImagePreview() {
+    const preview = document.getElementById('image-preview');
+    preview.src = '';
+    preview.style.display = 'none';
   }
 
   document.getElementById('file-input').addEventListener('change', checkUploadReady);
   document.getElementById('upload-btn').addEventListener('click', uploadFile);
 
   renderTree();
+
 </script>
 </body>
 </html>
