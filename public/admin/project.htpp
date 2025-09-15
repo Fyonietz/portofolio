@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-@meta(title="Project")
+  @meta(title="Admin Dashboard")
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio</title>
@@ -12,8 +12,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">``
 @meta;
 </head>
-<body class="bg-beige">
-    @header
+
+<body class="bg-beige text-charcoal font-poppins">
+  @header(link="/about")
   <!-- Navbar -->
     <header class="bg-crimson p-4 shadow-md fixed top-0 left-0 w-full z-50 ">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -24,8 +25,8 @@
 
             <!-- Navigation Links -->
             <nav class="space-x-6">
-                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Home</a>
-                <a href="#" class="text-gold hover:text-gray-300 transition duration-300">About</a>
+          <a href='/' class="text-gold hover:text-gray-300 transition duration-300">Home</a>
+          <a href='/about' class="text-gold hover:text-gray-300 transition duration-300">About</a>
                 <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Services</a>
                 <a href="#" class="text-gold hover:text-gray-300 transition duration-300">Contact</a>
             </nav>
@@ -41,43 +42,128 @@
         </div>
     </header>
 @header;
-    <section>
-   <!-- Main Container -->
-    <div class="container mx-auto p-8">
-        <h1 class="text-5xl font-bold text-crimson mb-4 text-center tracking-wider head">Add New Project</h1>
 
-        <!-- Form Container -->
-        <div class="bg-white shadow-lg rounded-lg max-w-lg mx-auto p-6">
-            <form id="project-form" method="POST">
+  <!-- AlpineJS Layout -->
+  <div class="flex min-h-screen pt-24" x-data="{
+    tab: 'add',
+    projects: [],
+    loadProjects() {
+      fetch('/admin/project/lists')
+        .then(res => res.json())
+        .then(data => this.projects = data)
+        .catch(err => console.error('Fetch failed', err));
+    },
+    deleteProject(id) {
+      if (!confirm('Are you sure you want to delete this project?')) return;
+      fetch('/admin/project/delete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('Failed to delete');
+        return res.json();
+      })
+      .then(() => {
+        this.projects = this.projects.filter(p => p.id !== id);
+      })
+      .catch(err => {
+        alert('Error deleting project');
+        console.error(err);
+      });
+    }
+  }" style="padding-top:2rem">
 
-                <!-- Project Name Input -->
-                <div class="mb-6">
-                    <label for="title" class="block text-sm font-medium text-charcoal">Project Name</label>
-                    <input type="text" id="title" name="title" class="mt-2 block w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive" placeholder="Enter project title" required>
-                </div>
+    <!-- Sidebar -->
+    <aside class="w-64 bg-crimson text-white p-6 space-y-6 hidden md:block">
+      <h2 class="text-2xl font-bold mb-6">Menu</h2>
+      <nav class="flex flex-col space-y-4">
+        <button @click="tab = 'add'" class="text-left hover:text-gold transition">➕ Add Project</button>
+        <button @click="tab = 'list'; loadProjects()" class="text-left hover:text-gold transition">📁 Project List</button>
+        <a href="#" class="hover:text-gold">🚪 Logout</a>
+      </nav>
+    </aside>
 
-                <!-- Project Description Input -->
-                <div class="mb-6">
-                    <label for="description" class="block text-sm font-medium text-charcoal">Project Description</label>
-                    <textarea id="description" name="description" class="mt-2 block w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive" placeholder="Enter project description" required></textarea>
-                </div>
+    <!-- Main Content -->
+    <main class="flex-1 p-8 space-y-12">
 
-                <!-- Project Link Input -->
-                <div class="mb-6">
-                    <label for="link" class="block text-sm font-medium text-charcoal">Project Link (Optional)</label>
-                    <input type="url" id="link" name="link" class="mt-2 block w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive" placeholder="Enter project link (if any)">
-                </div>
-
-                <!-- Submit Button -->
-                <div class="flex justify-center">
-                    <button type="submit" class="bg-gold text-white p-3 rounded-md hover:bg-gold/90 transition duration-200" id="submit_project">Add Project</button>
-                </div>
-            </form>
+      <!-- Add Project Tab -->
+      <div x-show="tab === 'add'" x-transition>
+        <h1 class="text-4xl font-bold text-crimson mb-8 head text-center">Add New Project</h1>
+        <div class="bg-white shadow-lg rounded-lg max-w-2xl mx-auto p-6">
+          <form id="project-form" method="POST">
+            <div class="mb-6">
+              <label for="title" class="block text-sm font-medium text-charcoal">Project Name</label>
+              <input type="text" id="title" name="title"
+                class="mt-2 w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive"
+                placeholder="Enter project title" required />
+            </div>
+            <div class="mb-6">
+              <label for="description" class="block text-sm font-medium text-charcoal">Project Description</label>
+              <textarea id="description" name="description"
+                class="mt-2 w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive"
+                placeholder="Enter project description" required></textarea>
+            </div>
+            <div class="mb-6">
+              <label for="link" class="block text-sm font-medium text-charcoal">Project Link (Optional)</label>
+              <input type="url" id="link" name="link"
+                class="mt-2 w-full p-3 border border-olive rounded-md focus:ring-2 focus:ring-olive focus:border-olive"
+                placeholder="Enter project link" />
+            </div>
+            <div class="flex justify-center">
+              <button type="submit"
+                class="bg-gold text-white px-6 py-3 rounded-md hover:bg-gold/90 transition">Add Project</button>
+            </div>
+          </form>
         </div>
-    </div>
-    </section>
+      </div>
 
-@style
+      <!-- Project List Tab -->
+      <div x-show="tab === 'list'" x-transition>
+        <h1 class="text-4xl font-bold text-crimson mb-8 head text-center">Project List</h1>
+        <div class="overflow-x-auto bg-white shadow-lg rounded-lg p-6">
+          <template x-if="projects.length > 0">
+            <table class="min-w-full table-auto border-collapse">
+              <thead>
+                <tr class="bg-olive text-white">
+                  <th class="py-3 px-4 text-left">#</th>
+                  <th class="py-3 px-4 text-left">Title</th>
+                  <th class="py-3 px-4 text-left">Description</th>
+                  <th class="py-3 px-4 text-left">Link</th>
+                  <th class="py-3 px-4 text-left">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <template x-for="(project, index) in projects" :key="project.id">
+                  <tr class="border-t hover:bg-gray-50">
+                    <td class="py-2 px-4" x-text="index + 1"></td>
+                    <td class="py-2 px-4" x-text="project.title"></td>
+                    <td class="py-2 px-4" x-text="project.desc"></td>
+                    <td class="py-2 px-4">
+                      <a :href="project.link" target="_blank" class="text-blue-600 underline">Visit</a>
+                    </td>
+                    <td class="py-2 px-4 space-x-2">
+                      <button @click="deleteProject(project.id)"
+                        class="bg-crimson text-white px-3 py-1 rounded hover:bg-red-700">Delete</button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </template>
+          <template x-if="projects.length === 0">
+            <div class="text-center text-gray-500">No projects found.</div>
+          </template>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Styles -->
+  @style
     <style>
        /* Font Style */
         body {
@@ -243,11 +329,8 @@
         }
       </style>
 @style;
-<style>
-  body{
-  padding-top: 10%;
-  }
-</style>
-<script src="script.js"></script>
+
+  <script src="script.js"></script>
 </body>
 </html>
+

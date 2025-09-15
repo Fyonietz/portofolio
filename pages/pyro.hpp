@@ -23,22 +23,20 @@ extern "C" struct EXPORT Pnix {
                      std::pair<std::string, std::map<std::string, std::string>>>
       layout_cache;
   std::mutex cache_mutex;
-  
-  int Response(struct mg_connection* conn, int status_code, const std::string& status_text, const std::string& json_body) {
-    mg_printf(conn,
-        "HTTP/1.1 %d %s\r\n"
-        "Content-Type: application/json\r\n"
-        "Content-Length: %zu\r\n"
-        "\r\n"
-        "%s",
-        status_code,
-        status_text.c_str(),
-        json_body.length(),
-        json_body.c_str()
-    );
 
-  return status_code;
-}
+  int Response(struct mg_connection *conn, int status_code,
+               const std::string &status_text, const std::string &json_body) {
+    mg_printf(conn,
+              "HTTP/1.1 %d %s\r\n"
+              "Content-Type: application/json\r\n"
+              "Content-Length: %zu\r\n"
+              "\r\n"
+              "%s",
+              status_code, status_text.c_str(), json_body.length(),
+              json_body.c_str());
+
+    return status_code;
+  }
   std::string Read(struct mg_connection *connection) {
     std::string body;
     char buffer[2048];
@@ -473,52 +471,37 @@ extern "C" struct EXPORT Pnix {
   }
 
   void home(const std::string &view_path, struct mg_connection *connection) {
-    const std::string layout_path = "public/layout.html";
-    const std::string child_path = view_path;
+    const std::string layout_path = view_path; // use layout directly
 
-    // Insert blocks based on tags found in the view
-    std::ifstream file(child_path);
+    // Open layout
+    std::ifstream file(layout_path);
     if (!file.is_open()) {
-      const char *msg = "500 Internal Server Error";
-      mg_printf(connection,
-                "HTTP/1.1 500 Internal Server Error\r\n"
-                "Content-Type: text/plain\r\n"
-                "Content-Length: %zu\r\n\r\n%s",
-                strlen(msg), msg);
-      return;
+      // Return 500
     }
 
+    // Read layout
     std::stringstream buffer;
     buffer << file.rdbuf();
     std::string html_content = buffer.str();
     file.close();
 
-    // Find all tags (e.g., @body) and insert layout blocks
+    // Extract and insert all tags
     std::vector<std::string> tags = extract_tags_from_content(html_content);
     for (const auto &tag : tags) {
-      insert_block(child_path, tag);
+      insert_block(layout_path, tag);
     }
 
-    // Read the modified file again
-    std::ifstream updated_file(child_path);
-    if (!updated_file.is_open()) {
-      const char *msg = "500 Internal Server Error";
-      mg_printf(connection,
-                "HTTP/1.1 500 Internal Server Error\r\n"
-                "Content-Type: text/plain\r\n"
-                "Content-Length: %zu\r\n\r\n%s",
-                strlen(msg), msg);
-      return;
-    }
-
+    // Read again after modification
+    std::ifstream updated_file(layout_path);
     std::stringstream updated_buffer;
     updated_buffer << updated_file.rdbuf();
     std::string final_html = updated_buffer.str();
     updated_file.close();
 
-    // Replace layout tags with HTML comments for SSR cleanliness
+    // Optionally remove tags or replace with comments
     final_html = commentify_tags(final_html, tags);
 
+    // Return HTML response
     mg_printf(connection,
               "HTTP/1.1 200 OK\r\n"
               "Content-Type: text/html\r\n"

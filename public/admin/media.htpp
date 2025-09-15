@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Upload Photo to Folder</title>
+<style>
+  body { font-family: Arial, sans-serif; padding: 1rem; }
+  ul { list-style-type: none; padding-left: 1.2em; margin: 0.3em 0; border-left: 1px dotted #ccc; }
+  li { cursor: pointer; user-select: none; position: relative; padding-left: 1.5em; }
+  li.file::before { content: "📄 "; position: absolute; left: 0; cursor: default; }
+  li.directory::before { content: "▶ "; position: absolute; left: 0; }
+  li.directory.expanded::before { content: "▼ "; }
+  ul.collapsible { display: none; }
+  ul.collapsible.expanded { display: block; }
+  li.selected { background-color: #cef; }
+  #selected-path { margin-top: 1rem; font-weight: bold; }
+  #upload-btn { margin-top: 1rem; padding: 0.5rem 1rem; }
+</style>
+</head>
+<body>
+  <h1>Upload Photo to Folder</h1>
+
+  <input type="file" id="file-input" accept="image/*" /><br />
+
+  <div id="directory-tree">Loading directory...</div>
+
+  <div id="selected-path">Selected folder: <em>None</em></div>
+
+  <button id="upload-btn" disabled>Upload</button>
+
+<script>
+  let selectedFolderPath = null;
+
+  async function fetchDirectoryData() {
+    try {
+      const response = await fetch('/api/folder/lists');
+      const data = await response.json();
+      return data;
+    } catch (err) {
+      console.error('Failed to load directory data:', err);
+      return null;
+    }
+  }
+
+  function buildTree(node, parentPath = '') {
+    if (!node || !node.contents) return null;
+
+    const ul = document.createElement('ul');
+    ul.classList.add('collapsible');
+
+    node.contents.forEach(child => {
+      const li = document.createElement('li');
+      li.textContent = child.name;
+
+      // Build full path for this node
+      const currentPath = parentPath + '/' + child.name;
+
+      if (child.type === 'directory') {
+        li.classList.add('directory');
+
+        const childTree = buildTree(child, currentPath);
+        if (childTree) {
+          li.appendChild(childTree);
+        }
+
+        // Toggle folder expand/collapse
+        li.addEventListener('click', e => {
+          e.stopPropagation();
+          li.classList.toggle('expanded');
+          if (childTree) childTree.classList.toggle('expanded');
+        });
+
+        // Select folder on double click
+        li.addEventListener('dblclick', e => {
+          e.stopPropagation();
+          selectFolder(currentPath, li);
+        });
+
+      } else {
+        li.classList.add('file');
+
+        // Show full path on file click
+        li.addEventListener('click', e => {
+          e.stopPropagation();
+          const fullPath = 'public' + currentPath;
+
+          // Highlight selected file
+          const prevSelected = document.querySelector('li.selected');
+          if (prevSelected) prevSelected.classList.remove('selected');
+          li.classList.add('selected');
+
+          // Show full file path
+          document.getElementById('selected-path').innerHTML =
+            `Selected file path: <em>${fullPath}</em>`;
+
+          // Set selected folder path to file's directory (for upload target)
+          selectedFolderPath = fullPath.substring(0, fullPath.lastIndexOf('/'));
+          checkUploadReady();
+        });
+      }
+
+      ul.appendChild(li);
+    });
+
+    return ul;
+  }
+
+  function selectFolder(path, liElement) {
+    // Remove previous selection highlight
+    const prevSelected = document.querySelector('li.selected');
+    if (prevSelected) prevSelected.classList.remove('selected');
+
+    // Highlight the newly selected folder
+    liElement.classList.add('selected');
+
+    selectedFolderPath = path;
+    document.getElementById('selected-path').innerHTML = `Selected folder: <em>${selectedFolderPath}</em>`;
+
+    checkUploadReady();
+  }
+
+  function checkUploadReady() {
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    uploadBtn.disabled = !(fileInput.files.length > 0 && selectedFolderPath);
+  }
+
+  async function uploadFile() {
+    const fileInput = document.getElementById('file-input');
+    if (fileInput.files.length === 0 || !selectedFolderPath) {
+      alert('Please select a file and a folder first.');
+      return;
+    }
+
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('folder', selectedFolderPath);
+
+    try {
+      const response = await fetch('/api/media/add', {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json();
+      if (response.ok) {
+        alert('Upload successful!');
+        fileInput.value = ''; // reset file input
+        document.getElementById('upload-btn').disabled = true;
+      } else {
+        alert('Upload failed: ' + (result.message || 'Unknown error'));
+      }
+    } catch (err) {
+      alert('Upload error: ' + err.message);
+    }
+  }
+
+  async function renderTree() {
+    const container = document.getElementById('directory-tree');
+    const data = await fetchDirectoryData();
+
+    if (!data || !Array.isArray(data)) {
+      container.textContent = 'Failed to load data.';
+      return;
+    }
+
+    const root = data.find(item => item.type === 'directory');
+    if (!root) {
+      container.textContent = 'No directory data found.';
+      return;
+    }
+
+    const tree = buildTree(root, ''); // root path empty string
+    container.innerHTML = '';
+    if (tree) {
+      tree.classList.add('expanded'); // root expanded by default
+      container.appendChild(tree);
+    }
+  }
+
+  document.getElementById('file-input').addEventListener('change', checkUploadReady);
+  document.getElementById('upload-btn').addEventListener('click', uploadFile);
+
+  renderTree();
+</script>
+</body>
+</html>
+

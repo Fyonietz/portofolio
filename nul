@@ -1,9 +1,8 @@
 [ 15%] Built target civetweb
 [ 38%] Built target core_static
+[ 46%] Linking CXX executable /home/fyonietz/Repo/portofolio/Phoenix
 [ 53%] Built target Phoenix
-[ 61%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/about.cpp.o
-[ 69%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/home.cpp.o
-[ 76%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/project.cpp.o
-[ 84%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
+[ 61%] Building CXX object routes/CMakeFiles/routes.dir/__/pages/project.cpp.o
+[ 69%] Linking CXX shared library /home/fyonietz/Repo/portofolio/core/libroutes.so
 Copying routes library to core directory
 [100%] Built target routes
